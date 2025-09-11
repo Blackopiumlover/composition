@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 @Composable
@@ -14,13 +15,23 @@ fun HomeScreen(
     navigationToHistory: () -> Unit,
     changePeriod: () -> Unit
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collect { event ->
+            when (event) {
+                is HomePageEvent.ExitApp -> onExit()
+            }
+        }
+    }
+
     Column {
         Text(
             text = "This is Home Screen."
         )
 
         Button(
-            onClick = onExit
+            onClick = {
+                viewModel.processIntent(HomePageIntent.ExitApp)
+            }
         ) {
             Text(
                 text = "Exit"

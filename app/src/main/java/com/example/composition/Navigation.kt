@@ -1,5 +1,7 @@
 package com.example.composition
 
+import android.app.Activity
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -15,8 +17,10 @@ sealed class Screen(val route: String) {
 
 fun NavGraphBuilder.homeGraph(navController: NavHostController) {
     composable(Screen.Home.route) {
+        val context = LocalContext.current
+
         HomeScreen(
-            onExit = {},
+            onExit = { (context as? Activity)?.finishAffinity() },
             navigateToCollection = { navController.navigate(Screen.Collection.route) },
             navigationToHistory = { navController.navigate(Screen.History.route) },
             changePeriod = {}
