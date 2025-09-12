@@ -22,7 +22,7 @@ fun NavGraphBuilder.homeGraph(navController: NavHostController) {
         HomeScreen(
             onExit = { (context as? Activity)?.finishAffinity() },
             navigateToCollection = { navController.navigate(Screen.Collection.route) },
-            navigationToHistory = { navController.navigate(Screen.History.route) },
+            navigateToHistory = { navController.navigate(Screen.History.route) },
             changePeriod = {}
         )
     }

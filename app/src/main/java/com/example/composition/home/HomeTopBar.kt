@@ -18,6 +18,7 @@ import com.example.composition.R
 
 @Composable
 fun HomeTopBar(
+    selectedIndex: Int,
     tabs: List<String>,
     onExit: () -> Unit,
     navigateToCollection: () -> Unit,
@@ -43,6 +44,33 @@ fun HomeTopBar(
                 }
                 .clickable(
                     onClick = onExit
+                )
+        )
+
+        HomeTabRow(
+            selectedIndex = selectedIndex,
+            tabList = tabs,
+            modifier = Modifier
+                .constrainAs(tabRow) {
+                    start.linkTo(exitIcon.end, 346.dp)
+                    end.linkTo(collectionIcon.start, 206.dp)
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                }
+        )
+
+        Image(
+            painter = painterResource(id = R.mipmap.ic_home_bookmark),
+            contentDescription = "Collection",
+            modifier = Modifier
+                .size(24.dp)
+                .constrainAs(collectionIcon) {
+                    end.linkTo(historyIcon.start, 28.dp)
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                }
+                .clickable(
+                    onClick = navigateToCollection
                 )
         )
 
@@ -95,6 +123,7 @@ fun HomeTopBar(
 @Composable
 fun PreviewHomeTopBar() {
     HomeTopBar(
+        selectedIndex = 0,
         tabs = listOf("首页", "练习", "范文", "广场"),
         onExit = {},
         navigateToCollection = {},
