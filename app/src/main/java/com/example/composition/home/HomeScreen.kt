@@ -10,9 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.composition.R
 import com.example.composition.example.ExampleContent
 import com.example.composition.exercise.ExerciseContent
 import com.example.composition.square.SquareContent
@@ -30,7 +33,9 @@ fun HomeScreen(
     val currentSelectedTabIndex = homeState.currentSelectedTabIndex
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .paint(painter = painterResource(R.mipmap.bg_common_page))
     ) {
         Spacer(
             modifier = Modifier.height(24.dp)

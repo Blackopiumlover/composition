@@ -26,7 +26,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        window.decorView.setBackgroundResource(R.mipmap.bg_common_page)
         setContent {
             CompositionTheme {
                 val navController = rememberNavController()
