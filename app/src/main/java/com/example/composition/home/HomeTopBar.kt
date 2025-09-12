@@ -22,11 +22,12 @@ import com.example.composition.R
 fun HomeTopBar(
     selectedIndex: Int,
     tabs: List<String>,
+    onTabClick: (Int) -> Unit,
     pagerState: PagerState,
     onExit: () -> Unit,
     navigateToCollection: () -> Unit,
     navigateToHistory: () -> Unit,
-    changePeriod: () -> Unit
+    changePeriod: (String) -> Unit
 ) {
     ConstraintLayout(
         modifier = Modifier
@@ -102,9 +103,6 @@ fun HomeTopBar(
                     top.linkTo(parent.top)
                     bottom.linkTo(parent.bottom)
                 }
-                .clickable(
-                    onClick = changePeriod
-                )
         )
 
         Text(
@@ -128,6 +126,7 @@ fun PreviewHomeTopBar() {
     HomeTopBar(
         selectedIndex = 0,
         tabs = listOf("首页", "练习", "范文", "广场"),
+        onTabClick = {},
         pagerState = rememberPagerState(initialPage = 0) { 4 },
         onExit = {},
         navigateToCollection = {},

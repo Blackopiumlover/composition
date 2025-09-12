@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -18,19 +17,7 @@ import com.example.composition.square.SquareContent
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    onExit: () -> Unit,
-    navigateToCollection: () -> Unit,
-    navigateToHistory: () -> Unit,
-    changePeriod: () -> Unit
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.eventFlow.collect { event ->
-            when (event) {
-                is HomePageEvent.ExitApp -> onExit()
-            }
-        }
-    }
-
     val tabs = listOf("首页", "练习", "范文", "广场")
     val pagerState = rememberPagerState(initialPage = 0) { tabs.size }
 
@@ -42,13 +29,24 @@ fun HomeScreen(
         )
 
         HomeTopBar(
-            selectedIndex = 0,
+            selectedIndex = pagerState.currentPage,
             tabs = tabs,
+            onTabClick = { index ->
+                viewModel.processIntent(HomePageIntent.SelectTab(index))
+            },
             pagerState = pagerState,
-            onExit = onExit,
-            navigateToCollection = navigateToCollection,
-            navigateToHistory = navigateToHistory,
-            changePeriod = changePeriod
+            onExit = {
+                viewModel.processIntent(HomePageIntent.ExitApp)
+            },
+            navigateToCollection = {
+                viewModel.processIntent(HomePageIntent.ClickCollection)
+            },
+            navigateToHistory = {
+                viewModel.processIntent(HomePageIntent.ClickHistory)
+            },
+            changePeriod = { newPeriodCode ->
+                viewModel.processIntent(HomePageIntent.ChangePeriod(newPeriodCode))
+            }
         )
 
         HorizontalPager(
