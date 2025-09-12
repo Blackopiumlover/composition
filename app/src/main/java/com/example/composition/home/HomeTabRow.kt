@@ -1,6 +1,7 @@
 package com.example.composition.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +25,7 @@ import com.example.composition.R
 fun HomeTabRow(
     selectedIndex: Int,
     tabList: List<String>,
+    onTabClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -32,7 +34,11 @@ fun HomeTabRow(
         tabList.forEachIndexed { index, string ->
             val isSelected = selectedIndex == index
             Box(
-                modifier = Modifier.height(32.dp)
+                modifier = Modifier
+                    .height(32.dp)
+                    .clickable(
+                        onClick = { onTabClick(index) }
+                    )
             ) {
                 Text(
                     text = string,
@@ -69,6 +75,7 @@ fun HomeTabRow(
 fun PreviewHomeTabRow() {
     HomeTabRow(
         selectedIndex = 1,
-        tabList = listOf("批改", "练习", "范文", "广场")
+        tabList = listOf("批改", "练习", "范文", "广场"),
+        onTabClick = {}
     )
 }

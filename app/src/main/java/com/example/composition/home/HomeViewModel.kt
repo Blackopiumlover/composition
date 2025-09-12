@@ -5,6 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.composition.navigation.NavigationHandler
 import com.example.composition.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -12,6 +16,9 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val navigationHandler: NavigationHandler
 ): ViewModel() {
+
+    private val _state = MutableStateFlow(HomeState())
+    val state: StateFlow<HomeState> = _state.asStateFlow()
 
     fun processIntent(intent: HomePageIntent) {
         when (intent) {
@@ -46,6 +53,11 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun selectTab(index: Int) {
-
+        if (index == _state.value.currentSelectedTabIndex) return
+        _state.update {
+            it.copy(
+                currentSelectedTabIndex = index
+            )
+        }
     }
 }

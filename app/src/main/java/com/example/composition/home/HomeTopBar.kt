@@ -5,8 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,7 +21,6 @@ fun HomeTopBar(
     selectedIndex: Int,
     tabs: List<String>,
     onTabClick: (Int) -> Unit,
-    pagerState: PagerState,
     onExit: () -> Unit,
     navigateToCollection: () -> Unit,
     navigateToHistory: () -> Unit,
@@ -54,6 +51,7 @@ fun HomeTopBar(
         HomeTabRow(
             selectedIndex = selectedIndex,
             tabList = tabs,
+            onTabClick = onTabClick,
             modifier = Modifier
                 .constrainAs(tabRow) {
                     start.linkTo(exitIcon.end, 346.dp)
@@ -127,7 +125,6 @@ fun PreviewHomeTopBar() {
         selectedIndex = 0,
         tabs = listOf("首页", "练习", "范文", "广场"),
         onTabClick = {},
-        pagerState = rememberPagerState(initialPage = 0) { 4 },
         onExit = {},
         navigateToCollection = {},
         navigateToHistory = {},

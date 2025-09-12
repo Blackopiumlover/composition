@@ -1,4 +1,7 @@
 package com.example.composition.home
 
-class HomeState {
+data class HomeState(
+    val currentSelectedTabIndex: Int = 0
+) {
+    val tabList = listOf("首页", "练习", "范文", "广场")
 }

@@ -7,9 +7,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.composition.example.ExampleContent
 import com.example.composition.exercise.ExerciseContent
 import com.example.composition.square.SquareContent
@@ -18,8 +21,13 @@ import com.example.composition.square.SquareContent
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
-    val tabs = listOf("首页", "练习", "范文", "广场")
-    val pagerState = rememberPagerState(initialPage = 0) { tabs.size }
+    val homeState by viewModel.state.collectAsStateWithLifecycle()
+
+    val tabList = homeState.tabList
+
+    val pagerState = rememberPagerState(initialPage = 0) { tabList.size }
+
+    val currentSelectedTabIndex = homeState.currentSelectedTabIndex
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -30,11 +38,10 @@ fun HomeScreen(
 
         HomeTopBar(
             selectedIndex = pagerState.currentPage,
-            tabs = tabs,
+            tabs = tabList,
             onTabClick = { index ->
                 viewModel.processIntent(HomePageIntent.SelectTab(index))
             },
-            pagerState = pagerState,
             onExit = {
                 viewModel.processIntent(HomePageIntent.ExitApp)
             },
@@ -48,6 +55,11 @@ fun HomeScreen(
                 viewModel.processIntent(HomePageIntent.ChangePeriod(newPeriodCode))
             }
         )
+
+        // 同步Tab选择状态
+        LaunchedEffect(currentSelectedTabIndex) {
+            pagerState.animateScrollToPage(currentSelectedTabIndex)
+        }
 
         HorizontalPager(
             state = pagerState,
