@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
@@ -98,6 +99,16 @@ fun ExampleContent(
                 }
             }
         }
+
+        Spacer(
+            modifier = Modifier.width(16.dp)
+        )
+
+        EssayGrid(
+            essayList = textbooks[selectedTextbookIndex].categoryList[expandedCategoryIndex].topicList[selectedTopicIndex].essayList,
+            modifier = Modifier
+                .padding(top = 20.dp)
+        )
     }
 }
 

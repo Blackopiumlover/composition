@@ -14,5 +14,21 @@ data class Category(
 
 data class Topic(
     val topicId: Int,
-    val topicName: String
+    val topicName: String,
+    val essayList: List<Essay>
+)
+
+data class Essay(
+    val category: String,
+    val collectCount: Int,
+    val compositionBrief: String,
+    val difficulty: Int,
+    val difficultyText: String,
+    val id: Int,
+    val isCollected: Int,
+    val stage: Int,
+    val stageText: String,
+    val titleTranslate: String,
+    val topicId: Int,
+    val viewCount: Int
 )

@@ -72,7 +72,8 @@ fun PreviewTopicItem() {
             isSelected = true,
             topic = Topic(
                 topicId = 0,
-                topicName = "自我管理"
+                topicName = "自我管理",
+                essayList = emptyList()
             ),
             onTopicSelected = {}
         )
@@ -85,7 +86,8 @@ fun PreviewTopicItem() {
             isSelected = false,
             topic = Topic(
                 topicId = 0,
-                topicName = "自我管理"
+                topicName = "自我管理",
+                essayList = emptyList()
             ),
             onTopicSelected = {}
         )
