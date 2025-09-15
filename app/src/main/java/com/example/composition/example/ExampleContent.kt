@@ -1,5 +1,6 @@
 package com.example.composition.example
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,10 +10,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,7 +39,10 @@ fun ExampleContent(
                 )
         ) {
             item {
-                Column {
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 20.dp)
+                ) {
                     TextbookSelection(
                         selectedIndex = 0,
                         textbooks = textbooks
@@ -50,6 +55,7 @@ fun ExampleContent(
                     Box(
                         modifier = Modifier
                             .size(272.dp, 1.dp)
+                            .background(color = Color(0x66d4d2e3))
                     )
 
                     Spacer(
@@ -58,8 +64,17 @@ fun ExampleContent(
                 }
             }
 
-            items(textbooks[0].categoryList) {
+            itemsIndexed(textbooks[0].categoryList) { index, category ->
+                CategoryItem(
+                    isExpanded = true,
+                    category = category
+                )
 
+                if (index < textbooks[0].categoryList.lastIndex) {
+                    Spacer(
+                        modifier = Modifier.height(20.dp)
+                    )
+                }
             }
         }
     }

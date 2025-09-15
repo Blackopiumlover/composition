@@ -61,7 +61,7 @@ fun HomeTabRow(
                 }
             }
 
-            if (index < tabList.size - 1) {
+            if (index < tabList.lastIndex) {
                 Spacer(
                     modifier = Modifier.width(40.dp)
                 )

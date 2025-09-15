@@ -33,8 +33,6 @@ fun TextbookSelection(
     Row(
         modifier = Modifier.wrapContentSize()
             .padding(
-                start = 20.dp,
-                end = 20.dp,
                 top = 20.dp
             )
     ) {
@@ -67,7 +65,7 @@ fun TextbookSelection(
                 )
             }
 
-            if (index < textbooks.size - 1) {
+            if (index < textbooks.lastIndex) {
                 Spacer(
                     modifier = Modifier.width(16.dp)
                 )
