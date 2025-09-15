@@ -160,7 +160,7 @@ private fun textColorByDifficulty(difficulty: String): Color = when (difficulty)
     else -> Color(0xFF17846C)
 }
 
-private fun Int.toHumanReadableString(): String {
+fun Int.toHumanReadableString(): String {
     val num = this
     val shortFormStr = if (num < 1000) {
         num.toString()
