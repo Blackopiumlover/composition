@@ -1,6 +1,7 @@
 package com.example.composition.example
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,8 +25,13 @@ import com.example.composition.data.textbookList
 fun CategoryItem(
     isExpanded: Boolean,
     category: Category,
+    onCategoryToggled: () -> Unit,
+    selectedTopicIndex: Int,
+    onTopicSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val topics = category.topicList
+    
     Column(
         modifier = modifier
             .padding(horizontal = 20.dp)
@@ -37,6 +43,9 @@ fun CategoryItem(
         Row(
             modifier = Modifier
                 .width(272.dp)
+                .clickable(
+                    onClick = onCategoryToggled
+                )
         ) {
             Image(
                 painter = painterResource(id = categoryIconResourceId(category.categoryName)),
@@ -68,13 +77,14 @@ fun CategoryItem(
         )
 
         if (isExpanded) {
-            category.topicList.forEachIndexed { index, topic ->
+            topics.forEachIndexed { index, topic ->
                 TopicItem(
-                    isSelected = true,
-                    topic = topic
+                    isSelected = index == selectedTopicIndex,
+                    topic = topic,
+                    onTopicSelected = { onTopicSelected(index) }
                 )
 
-                if (index < category.topicList.lastIndex) {
+                if (index < topics.lastIndex) {
                     Spacer(
                         modifier = Modifier.height(8.dp)
                     )
@@ -105,6 +115,9 @@ private val categoryIconMap = mapOf(
 fun PreviewCategoryItem() {
     CategoryItem(
         isExpanded = true,
-        category = textbookList[0].categoryList[0]
+        category = textbookList[0].categoryList[0],
+        onCategoryToggled = {},
+        selectedTopicIndex = 0,
+        onTopicSelected = {}
     )
 }

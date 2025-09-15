@@ -1,6 +1,7 @@
 package com.example.composition.example
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,6 +26,7 @@ import com.example.composition.data.Topic
 fun TopicItem(
     isSelected: Boolean,
     topic: Topic,
+    onTopicSelected: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val gradientBrush = Brush.horizontalGradient(
@@ -34,7 +36,12 @@ fun TopicItem(
         )
     )
 
-    Row {
+    Row(
+        modifier = Modifier
+            .clickable(
+                onClick = onTopicSelected
+            )
+    ) {
         Spacer(
             modifier = Modifier.width(18.dp)
         )
@@ -66,7 +73,8 @@ fun PreviewTopicItem() {
             topic = Topic(
                 topicId = 0,
                 topicName = "自我管理"
-            )
+            ),
+            onTopicSelected = {}
         )
 
         Spacer(
@@ -78,7 +86,8 @@ fun PreviewTopicItem() {
             topic = Topic(
                 topicId = 0,
                 topicName = "自我管理"
-            )
+            ),
+            onTopicSelected = {}
         )
     }
 }

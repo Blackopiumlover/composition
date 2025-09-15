@@ -12,20 +12,31 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.composition.R
-import com.example.composition.data.Textbook
-import com.example.composition.data.textbookList
 
 @Composable
 fun ExampleContent(
-    textbooks: List<Textbook> = textbookList
+    viewModel: ExampleViewModel = hiltViewModel()
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    val textbooks = state.textbooks
+    val selectedTextbookIndex = state.selectedTextbookIndex
+
+    val expandedCategoryIndex = state.expandedCategoryIndex
+    val isSelectedCategoryExpanded = state.isSelectedCategoryExpanded
+
+    val selectedTopicIndex = state.selectedTopicIndex
+
     Row(
         modifier = Modifier
             .fillMaxSize()
@@ -45,7 +56,10 @@ fun ExampleContent(
                 ) {
                     TextbookSelection(
                         selectedIndex = 0,
-                        textbooks = textbooks
+                        textbooks = textbooks,
+                        onTextbookSelected = { index ->
+                            viewModel.processIntent(ExampleIntent.SelectTextbook(index))
+                        }
                     )
 
                     Spacer(
@@ -64,10 +78,17 @@ fun ExampleContent(
                 }
             }
 
-            itemsIndexed(textbooks[0].categoryList) { index, category ->
+            itemsIndexed(textbooks[selectedTextbookIndex].categoryList) { index, category ->
                 CategoryItem(
-                    isExpanded = true,
-                    category = category
+                    isExpanded = index == expandedCategoryIndex && !isSelectedCategoryExpanded,
+                    category = category,
+                    onCategoryToggled = {
+                        viewModel.processIntent(ExampleIntent.ToggleCategory(index))
+                    },
+                    selectedTopicIndex = selectedTopicIndex,
+                    onTopicSelected = { index ->
+                        viewModel.processIntent(ExampleIntent.SelectTopic(index))
+                    }
                 )
 
                 if (index < textbooks[0].categoryList.lastIndex) {
@@ -83,7 +104,5 @@ fun ExampleContent(
 @Preview
 @Composable
 fun PreviewExampleContent() {
-    ExampleContent(
-        textbooks = textbookList
-    )
+    ExampleContent()
 }

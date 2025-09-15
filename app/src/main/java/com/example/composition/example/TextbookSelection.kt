@@ -2,6 +2,7 @@ package com.example.composition.example
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,6 +29,7 @@ import com.example.composition.data.textbookList
 fun TextbookSelection(
     selectedIndex: Int,
     textbooks: List<Textbook>,
+    onTextbookSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -45,6 +47,9 @@ fun TextbookSelection(
                     .size(80.dp, 40.dp)
                     .clip(RoundedCornerShape(8.dp))
                     .background(if (isSelected) Color.Transparent else Color(0x40D4D2E3))
+                    .clickable(
+                        onClick = { onTextbookSelected(index) }
+                    )
             ) {
                 if (isSelected) {
                     Image(
@@ -79,6 +84,7 @@ fun TextbookSelection(
 fun PreviewTextbookSelection() {
     TextbookSelection(
         selectedIndex = 0,
-        textbooks = textbookList
+        textbooks = textbookList,
+        onTextbookSelected = {}
     )
 }
