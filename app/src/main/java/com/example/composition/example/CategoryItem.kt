@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -31,6 +32,25 @@ fun CategoryItem(
     modifier: Modifier = Modifier
 ) {
     val topics = category.topicList
+
+    // 缓存资源 ID，避免每次重组时重新计算
+    val categoryIcon = remember(category.categoryName) {
+        categoryIconResourceId(category.categoryName)
+    }
+
+    // 缓存展开 / 折叠图标资源 ID
+    val expandCollapseIcon = remember(isExpanded) {
+        if (isExpanded) R.mipmap.bc_example_essay_category_close else R.mipmap.bc_example_essay_category_open
+    }
+
+    // 预先组合常用修饰符
+    val rowModifier = remember {
+        Modifier
+            .width(272.dp)
+            .clickable(
+                onClick = onCategoryToggled
+            )
+    }
     
     Column(
         modifier = modifier
@@ -41,14 +61,10 @@ fun CategoryItem(
         )
 
         Row(
-            modifier = Modifier
-                .width(272.dp)
-                .clickable(
-                    onClick = onCategoryToggled
-                )
+            modifier = rowModifier
         ) {
             Image(
-                painter = painterResource(id = categoryIconResourceId(category.categoryName)),
+                painter = painterResource(id = categoryIcon),
                 contentDescription = "Category Icon",
                 modifier = Modifier.size(24.dp)
             )
@@ -66,7 +82,7 @@ fun CategoryItem(
             )
 
             Image(
-                painter = painterResource(id = if (isExpanded) R.mipmap.bc_example_essay_category_close else R.mipmap.bc_example_essay_category_open),
+                painter = painterResource(id = expandCollapseIcon),
                 contentDescription = "Expand / Collapse",
                 modifier = Modifier.size(24.dp)
             )
@@ -76,8 +92,15 @@ fun CategoryItem(
             modifier = Modifier.height(12.dp)          
         )
 
+        // 优化条件渲染逻辑，只在展开状态下渲染主题列表
         if (isExpanded) {
-            topics.forEachIndexed { index, topic ->
+            val topicContent = remember(topics, selectedTopicIndex) {
+                topics.mapIndexed { index, topic ->
+                    index to topic
+                }
+            }
+
+            topicContent.forEach { (index, topic) ->
                 TopicItem(
                     isSelected = index == selectedTopicIndex,
                     topic = topic,
@@ -85,9 +108,7 @@ fun CategoryItem(
                 )
 
                 if (index < topics.lastIndex) {
-                    Spacer(
-                        modifier = Modifier.height(8.dp)
-                    )
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
         }
