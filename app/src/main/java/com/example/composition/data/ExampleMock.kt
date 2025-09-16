@@ -401,7 +401,19 @@ val textbookList = listOf(
     ),
     Textbook(
         category = "PET",
-        categoryList = listOf(),
+        categoryList = listOf(
+            Category(
+                categoryId = 6,
+                categoryName = "自我探索",
+                topicList = listOf(
+                    Topic(
+                        topicId = 55,
+                        topicName = "模范榜样",
+                        essayList = emptyList()
+                    )
+                )
+            )
+        ),
         categoryName = "PET"
     )
 )
