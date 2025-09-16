@@ -12,11 +12,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,12 +41,32 @@ fun ExampleContent(
 
     val selectedTopicIndex = state.selectedTopicIndex
 
+    // 缓存背景资源
+    val backgroundPainter = painterResource(id = R.mipmap.bc_example_essay_background)
+
+    // 使用 LazyListState 并优化滚动状态
+    val lazyListState = rememberLazyListState()
+
+    // 缓存当前选中的分类和主题
+    val currentCategory = remember(selectedTextbookIndex, expandedCategoryIndex) {
+        textbooks[selectedTextbookIndex].categoryList[expandedCategoryIndex]
+    }
+
+    // 缓存当前选中主题的文章列表
+    val currentEssayList = remember(currentCategory, selectedTopicIndex) {
+        currentCategory.topicList[selectedTopicIndex].essayList
+    }
+
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .paint(painter = painterResource(id = R.mipmap.bc_example_essay_background))
+            .paint(
+                painter = backgroundPainter,
+                contentScale = ContentScale.FillBounds
+            )
     ) {
         LazyColumn(
+            state = lazyListState,
             modifier = Modifier
                 .padding(
                     start = 28.dp,
@@ -56,7 +79,7 @@ fun ExampleContent(
                         .padding(horizontal = 20.dp)
                 ) {
                     TextbookSelection(
-                        selectedIndex = 0,
+                        selectedIndex = selectedTextbookIndex,
                         textbooks = textbooks,
                         onTextbookSelected = { index ->
                             viewModel.processIntent(ExampleIntent.SelectTextbook(index))
@@ -79,7 +102,10 @@ fun ExampleContent(
                 }
             }
 
-            itemsIndexed(textbooks[selectedTextbookIndex].categoryList) { index, category ->
+            itemsIndexed(
+                items = textbooks[selectedTextbookIndex].categoryList,
+                key = { _, category -> category.categoryId }
+            ) { index, category ->
                 CategoryItem(
                     isExpanded = index == expandedCategoryIndex && !isSelectedCategoryExpanded,
                     category = category,
@@ -105,7 +131,7 @@ fun ExampleContent(
         )
 
         EssayGrid(
-            essayList = textbooks[selectedTextbookIndex].categoryList[expandedCategoryIndex].topicList[selectedTopicIndex].essayList,
+            essayList = currentEssayList,
             modifier = Modifier
                 .padding(top = 20.dp)
         )
