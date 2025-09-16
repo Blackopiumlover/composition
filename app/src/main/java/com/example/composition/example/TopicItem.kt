@@ -8,10 +8,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -29,37 +29,51 @@ fun TopicItem(
     onTopicSelected: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val gradientBrush = Brush.horizontalGradient(
-        colors = listOf(
-            Color(0xFFEDEEFF),
-            Color.Transparent
-        )
-    )
-
-    Row(
-        modifier = Modifier
-            .clickable(
-                onClick = onTopicSelected
+    // 缓存渐变背景，避免每次重组时重新创建
+    val gradientBrush = remember {
+        Brush.horizontalGradient(
+            colors = listOf(
+                Color(0xFFEDEEFF),
+                Color.Transparent
             )
-    ) {
-        Spacer(
-            modifier = Modifier.width(18.dp)
         )
+    }
 
+    // 缓存文本颜色，避免每次重组时重新计算
+    val textColor = remember(isSelected) {
+        if (isSelected) Color(0xFF7273EB) else Color(0x99333333)
+    }
+
+    // 缓存背景画笔，避免每次重组时重新计算
+    val backgroundBrush = remember(isSelected) {
+        if (isSelected) gradientBrush else SolidColor(Color.Transparent)
+    }
+
+    // 优化修饰符链，减少嵌套层级
+    val textModifier = remember(isSelected) {
+        Modifier
+            .size(254.dp, 40.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(brush = backgroundBrush)
+            .padding(
+                start = 12.dp,
+                top = 8.dp,
+                bottom = 8.dp
+            )
+    }
+
+    // 使用单一修饰符链，减少布局计算
+    Row(
+        modifier = modifier
+            .clickable(onClick = onTopicSelected)
+            .padding(start = 18.dp)
+    ) {
         Text(
             text = topic.topicName,
             fontSize = 16.sp,
             lineHeight = 24.sp,
-            color = if (isSelected) Color(0xFF7273EB) else Color(0x99333333),
-            modifier = modifier
-                .size(254.dp, 40.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(brush = if (isSelected) gradientBrush else SolidColor(Color.Transparent))
-                .padding(
-                    start = 12.dp,
-                    top = 8.dp,
-                    bottom = 8.dp
-                )
+            color = textColor,
+            modifier = textModifier
         )
     }
 }
